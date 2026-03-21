@@ -41,6 +41,22 @@
 <c:forEach var="mutter" items="${mutterList}">
 	<p><c:out value="${mutter.userName }" />：<c:out value="${mutter.text }" /></p>
 </c:forEach>
+<br>
+<p>こちらはchooseタグを活用した事例</p>
+<c:choose>
+	<c:when test="${empty mutterList}">
+		<p>条件式１の場合の表示、mutterListが空ならこちらを表示</p>
+	</c:when>
+	<c:when test="${mutterList.size() == 1}">
+		<p>mutterListが１つなら、という条件に合致</p>
+	</c:when>
+	<c:when test="${mutterList.size() >= 10}">
+		<p>mutterListが10以上なら、という条件に合致</p>
+	</c:when>
+	<c:otherwise>
+		<p>現在 ${mutterList.size()}件の投稿があります。</p>
+	</c:otherwise>
+</c:choose>
 <!-- これは動的include -->
 <jsp:include page="footer.jsp" />
 </body>
