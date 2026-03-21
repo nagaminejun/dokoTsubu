@@ -1,18 +1,18 @@
 package servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.GetMutterListLogic;
 import model.Mutter;
+import model.PostMutterLogic;
 import model.User;
 
 @WebServlet("/Main")
@@ -20,16 +20,23 @@ public class Main extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    // つぶやきリストをアプリケーションスコープから取得
-    ServletContext application = this.getServletContext();
-    List<Mutter> mutterList = (List<Mutter>) application.getAttribute("mutterList");
-    // 取得できなかった場合は、つぶやきリストを新規作成して
-    // アプリケーションスコープに保存
-    if (mutterList == null) {
-      mutterList = new ArrayList<>();
-      // ここで、アプリケーションスコープの設定が行われる。第一引数がその名前の命名
-      application.setAttribute("mutterList", mutterList);
-    }
+    // こちらはアプリケーションスコープの実装
+  	// つぶやきリストをアプリケーションスコープから取得
+//    ServletContext application = this.getServletContext();
+//    List<Mutter> mutterList = (List<Mutter>) application.getAttribute("mutterList");
+//    // 取得できなかった場合は、つぶやきリストを新規作成して
+//    // アプリケーションスコープに保存
+//    if (mutterList == null) {
+//      mutterList = new ArrayList<>();
+//      // ここで、アプリケーションスコープの設定が行われる。第一引数がその名前の命名
+//      application.setAttribute("mutterList", mutterList);
+//    }
+  	GetMutterListLogic getMutterListLogic = new GetMutterListLogic();
+  	// DBから最新のつぶやきリストを取得するロジックを呼び出す
+  	List<Mutter> mutterList = getMutterListLogic.execute();
+  	// 取得したリストをリクエストスコープに保存する
+  	// main.jspでそれをfor eachで表示するため、
+  	request.setAttribute("mutterList", mutterList);
     
     // ログインしているか確認するため
     // セッションスコープからユーザー情報を取得
@@ -56,20 +63,20 @@ public class Main extends HttpServlet {
 		// パラメータに値があるなら、、つまりPost時に適切な値であるなら、
 		if(text != null && text.length() != 0) {
 			// アプリケーションスコープに保存されたつぶやきリストを取得
-			ServletContext application = this.getServletContext();
-			List<Mutter> mutterList = (List<Mutter>) application.getAttribute("mutterList");
+//			ServletContext application = this.getServletContext();
+//			List<Mutter> mutterList = (List<Mutter>) application.getAttribute("mutterList");
 			
 			// セッションスコープに保存されたユーザー情報を取得
 			HttpSession session = request.getSession();
 			User loginuser = (User) session.getAttribute("loginUser");
 			
-			// つぶやきを作成してつぶやきリストに追加
+			// つぶやきを作成してつぶやきリスト（DB）に追加
 			Mutter mutter = new Mutter(loginuser.getName(), text);
 			PostMutterLogic postMutterLogic = new PostMutterLogic();
-			postMutterLogic.execute(mutter, mutterList);
+			postMutterLogic.execute(mutter);
 			
 			// アプリケーションスコープにつぶやきリストを保存
-			application.setAttribute("mutterList", mutterList);
+//			application.setAttribute("mutterList", mutterList);
 		} else {
 			// エラーメッセージをリクエストスコープに保存
 			request.setAttribute(""
