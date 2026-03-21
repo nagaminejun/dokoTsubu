@@ -49,7 +49,7 @@ public class Main extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// リクエストパラメータの取得
-		request.setCharacterEncoding("UTF-8");
+		// request.setCharacterEncoding("UTF-8");
 		String text = request.getParameter("text");
 		
 		// 入力チェック
@@ -72,7 +72,8 @@ public class Main extends HttpServlet {
 			application.setAttribute("mutterList", mutterList);
 		} else {
 			// エラーメッセージをリクエストスコープに保存
-			request.setAttribute("errorMsg", "つぶやきが入力されていません");
+			request.setAttribute(""
+					+ "", "つぶやきが入力されていません");
 		}
 			
 		// メイン画面にフォワード

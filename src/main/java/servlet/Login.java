@@ -18,7 +18,7 @@ public class Login extends HttpServlet {
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     // リクエストパラメータの取得
-    request.setCharacterEncoding("UTF-8");
+    // request.setCharacterEncoding("UTF-8");
     String name = request.getParameter("name");
     String pass = request.getParameter("pass");
     // Userインスタンス（ユーザー情報）の生成
