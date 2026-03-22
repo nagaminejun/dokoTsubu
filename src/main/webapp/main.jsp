@@ -17,8 +17,7 @@
 <body>
 <h1>どこつぶメイン</h1>
 <p>
-<%-- <%= loginUser.getName() %> --%>
-さん、ログイン中
+
 <a href="Logout">ログアウト</a>
 </p>
 <p><a href="Main">更新</a></p>
@@ -27,7 +26,8 @@
 <input type="submit" name="つぶやく">
 </form>
 <h2>ここからJSTLのCoreタグ活用した表示</h2>
-<c:out value="${loginUser.name}"/>さん、Coreタグでnameを取得
+<c:out value="${userId}" />
+さん、ログイン中、Coreタグでnameを取得
 <%-- <% if(errorMsg != null) {%>
 <p><%= errorMsg %></p>
 <% } %>

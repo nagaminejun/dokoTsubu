@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpSession;
 import model.GetMutterListLogic;
 import model.Mutter;
 import model.PostMutterLogic;
-import model.User;
 
 @WebServlet("/Main")
 public class Main extends HttpServlet {
@@ -40,10 +39,13 @@ public class Main extends HttpServlet {
     
     // ログインしているか確認するため
     // セッションスコープからユーザー情報を取得
-    HttpSession session = request.getSession();
-    User loginUser = (User) session.getAttribute("loginUser");
+    // HttpSession session = request.getSession();
+    // User loginUser = (User) session.getAttribute("loginUser");
+  	
+  	HttpSession session = request.getSession();
+  	String userId = (String) session.getAttribute("userId");
     
-    if (loginUser == null) { // ログインしていない場合
+    if (userId == null) { // ログインしていない場合
       // リダイレクト
       response.sendRedirect("index.jsp");
       return;
@@ -68,10 +70,10 @@ public class Main extends HttpServlet {
 			
 			// セッションスコープに保存されたユーザー情報を取得
 			HttpSession session = request.getSession();
-			User loginuser = (User) session.getAttribute("loginUser");
+			String userId = (String) session.getAttribute("userId");
 			
 			// つぶやきを作成してつぶやきリスト（DB）に追加
-			Mutter mutter = new Mutter(loginuser.getName(), text);
+			Mutter mutter = new Mutter(userId, text);
 			PostMutterLogic postMutterLogic = new PostMutterLogic();
 			postMutterLogic.execute(mutter);
 			
@@ -84,7 +86,11 @@ public class Main extends HttpServlet {
 		}
 			
 		// メイン画面にフォワード
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/main.jsp");
-    dispatcher.forward(request, response);
+		// ※フォワード実行だと、doGetが実行されず結果的につぶやきの取得が実行されない。
+		// リダイレクトを実行することでdoGetメソッドが実行され、結果的につぶやき一覧取得ができる。
+		// RequestDispatcher dispatcher = request.getRequestDispatcher("/main.jsp");
+    // dispatcher.forward(request, response);
+		
+		response.sendRedirect("Main");
 	}
 }
